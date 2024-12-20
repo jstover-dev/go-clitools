@@ -2,7 +2,6 @@ package cat
 
 import (
 	"fmt"
-	//"io"
 	"bufio"
 	"os"
 )
@@ -62,6 +61,9 @@ func parseArgs(argv []string) Arguments {
 			inputs = append(inputs, arg)
 		}
 	}
+	if len(inputs) == 0 {
+		inputs = append(inputs, "-")
+	}
 	return Arguments{flags: flags, inputs: inputs}
 }
 
@@ -79,17 +81,24 @@ func Cat(argv []string) {
 	prev := byte('\n')
 	ignoreNewlines := false
 
-	lineNumber := 0
+	lineNumber := 1
 	outBuffer := bufio.NewWriter(os.Stdout)
 
-	for _, file := range args.inputs {
+	for _, filename := range args.inputs {
 
-		file, err := os.Open(file)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+		var err error
+		var file *os.File
+
+		if filename == "-" {
+			file = os.Stdin
+		} else {
+			file, err = os.Open(filename)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			defer file.Close()
 		}
-		defer file.Close()
 		reader := bufio.NewReader(file)
 
 		for {
@@ -124,10 +133,28 @@ func Cat(argv []string) {
 				if (args.flags.T) {
 					outBuffer.WriteString("^I")
 				}
-			}
-			prev = chr
-			outBuffer.WriteByte(chr)
+			} else if (args.flags.v) {
+				// if isascii(chr)
+				if ! (chr < 0x80) {
+					outBuffer.WriteString("M-");
+					// toascii
+					chr &= 0x7F
+				}
+				// if iscntrl(chr)
+				if (chr <= 0x1F || chr == 0x7F) {
+					outBuffer.WriteByte('^')
+					if (chr == 0x7F) {
+						outBuffer.WriteByte('?')
+					} else {
+						outBuffer.WriteByte(chr | 0x40)
+					}
+					continue
+				}
 
+			}
+
+			outBuffer.WriteByte(chr)
+			prev = chr
 		}
 		outBuffer.Flush()
 
