@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	wc.Wc(os.Args[1:])
+	wc.Wc(os.Args)
 }

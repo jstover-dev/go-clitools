@@ -30,7 +30,7 @@ func parseArgs(argv []string) Arguments {
 	flags := Flags{}
 	inputs := []string{}
 
-	for _, arg := range argv {
+	for _, arg := range argv[1:] {
 		if arg == "-A" || arg == "--show-all" {
 			flags.A = true
 		} else if arg == "-b" || arg == "--number-nonblank" {

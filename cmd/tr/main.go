@@ -6,5 +6,5 @@ import (
 )
 
 func main(){
-	tr.Tr(os.Args[1:])
+	tr.Tr(os.Args)
 }

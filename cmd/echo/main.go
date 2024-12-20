@@ -6,5 +6,5 @@ import (
 )
 
 func main(){
-	echo.Echo(os.Args[1:])
+	echo.Echo(os.Args)
 }

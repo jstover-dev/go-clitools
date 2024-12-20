@@ -7,12 +7,14 @@ import (
 	"codeberg.org/jstover/clitools/pkg/cat"
 	"codeberg.org/jstover/clitools/pkg/echo"
 	"codeberg.org/jstover/clitools/pkg/tr"
+	"codeberg.org/jstover/clitools/pkg/wc"
 )
 
 var applications = map[string]func([]string){
 	"cat": cat.Cat,
 	"echo": echo.Echo,
 	"tr": tr.Tr,
+	"wc": wc.Wc,
 }
 
 func main() {
@@ -20,7 +22,8 @@ func main() {
 		if len(os.Args) > i {
 			fn, ok := applications[path.Base(os.Args[i])]
 			if ok {
-				fn(os.Args[i + 1:])
+				os.Args = os.Args[1:]
+				fn(os.Args)
 			}
 		}
 	}
