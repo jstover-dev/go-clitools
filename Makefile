@@ -21,10 +21,6 @@ PKG_SOURCES  := $(call rwildcard,pkg,*.go)
 MAIN_SOURCES := $(wildcard cmd/$(MAIN)/*) $(PKG_SOURCES)
 
 
-debug:
-	echo $(MAIN_SOURCES)
-
-
 .PHONY: all clean
 
 all: $(APP_TARGETS) $(LINK_TARGETS)

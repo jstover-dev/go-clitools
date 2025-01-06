@@ -22,8 +22,9 @@ func main() {
 		if len(os.Args) > i {
 			fn, ok := applications[path.Base(os.Args[i])]
 			if ok {
-				os.Args = os.Args[1:]
+				os.Args = os.Args[i:]
 				fn(os.Args)
+				os.Exit(0)
 			}
 		}
 	}
